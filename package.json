@@ -10,9 +10,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "bcrypt": "^3.0.7",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "nodemon": "^1.19.3"
-  }
+    "nodemon": "^1.19.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kellyjoany/meli-post.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kellyjoany/meli-post/issues"
+  },
+  "homepage": "https://github.com/kellyjoany/meli-post#readme"
 }
