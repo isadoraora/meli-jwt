@@ -1,6 +1,6 @@
 const alunas = require("../model/alunas.json")
 const fs = require('fs');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 const bcryptSalt = 8;
 
 exports.get = (req, res) => {
@@ -64,19 +64,39 @@ function calcularIdade(anoDeNasc, mesDeNasc, diaDeNasc) {
   return idade
 }
 
-exports.post = (req, res) => {
-  const { nome, dateOfBirth, nasceuEmSp, id, livros } = req.body;
-  alunas.push({ nome, dateOfBirth, nasceuEmSp, id, livros });
+// exports.post = (req, res) => {
+//   const { nome, dateOfBirth, nasceuEmSp, id, livros } = req.body;
+//   alunas.push({ nome, dateOfBirth, nasceuEmSp, id, livros });
 
-  fs.writeFile("./src/model/alunas.json", JSON.stringify(alunas), 'utf8', function (err) {
-    if (err) {
-      return res.status(500).send({ message: err });
-    }
-    console.log("The file was saved!");
-  });
+//   fs.writeFile("./src/model/alunas.json", JSON.stringify(alunas), 'utf8', function (err) {
+//     if (err) {
+//       return res.status(500).send({ message: err });
+//     }
+//     console.log("The file was saved!");
+//   });
 
-  return res.status(201).send(alunas);
+//   return res.status(201).send(alunas);
+// }
+exports.post = async (req, res) => {
+  //pego req.body e faço uma desconstrução
+  const { nome, password, dateOfBirth, nasceuEmSp, id, livros } = req.body;
+  const salt = bcryptjs.genSaltSync(bcryptSalt); //aqui é síncrono mas dentro de um get async
+  try {
+    const hashPass = await bcryptjs.hashSync(password, salt);
+    alunas.push({ nome, hashPass, dateOfBirth, nasceuEmSp, id, livros });
+
+    fs.writeFile("./src/model/alunas.json", JSON.stringify(alunas), 'utf8', function (err) {
+      if (err) {
+        return res.status(500).send({ message: err });
+      }
+      console.log("The file was saved!");
+    });
+    return res.status(201).send(alunas);
+  } catch (e) {
+    return res.status(401).json({ error: 'erro' });
+  }
 }
+
 
 exports.postBooks = (req, res) => {
   const id = req.params.id

@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth');
 const alunas = require('../model/alunas.json');
-const bcrypt = require('bcrypt')
+const bcryptjs = require('bcryptjs');
 
 function checkPassword(passwordEntry, password) {
-    return bcrypt.compareSync(passwordEntry, password);
+    return bcryptjs.compareSync(passwordEntry, password);
 }
 
 exports.getToken = (req, res) => {
